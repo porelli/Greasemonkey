@@ -15,6 +15,12 @@
 
 // Credits to igorlogius for original script: https://greasyfork.org/en/scripts/411199-download-table-as-csv/code
 
+// VERSIONS
+/*
+0.1 - initial
+0.2 - added new amount detection strings
+*/
+
 function startScript() {
     console.log('table element has arrived!')
 
@@ -52,11 +58,16 @@ function startScript() {
 				var data = col.innerText.replace(/(\r\n|\n|\r)/gm, '').replace(/(\s\s)/gm, ' ')
 				// escape double-quote with double-double-quote
 				data = data.replace(/"/g, '""');
+                //console.log('***');
+                //console.log(data);
                 // remove dollar signs, random pluses and commas from amount
-                const is_amount = ['-$', '- $', '$', '+ $','+$'].some((word) => data.startsWith(word));
+                const is_amount = ['−$', '− $', '-$', '- $', '$', '+ $','+$'].some((word) => data.startsWith(word));
+                //console.log(is_amount);
                 if (is_amount) {
-                    data = data.replace(/(\$|,|\+)/gm, '').replace(/(\s)/gm, '');
+                    data = data.replace(/(\$|,|\+|−)/gm, '').replace(/(\s)/gm, '').replace(/−/gm, '-');
                 }
+                //console.log(data);
+                //console.log('***');
 
 				row.push('"' + data + '"');
 			});
@@ -107,3 +118,4 @@ function startScript() {
 
     waitForKeyElements("app-transaction-table", startScript);
 }());
+
